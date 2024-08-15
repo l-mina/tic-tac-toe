@@ -78,12 +78,162 @@ function gameController(
 
     const printNewRound = () => {
         board.printBoard();
-        console.log(`${getActivePlayer().name}'s turn.`);
+        //console.log(`${getActivePlayer().name}'s turn.`);
+    };
+
+    const resetGame = () => {
+        const b = board.getBoard();
+        for(let i = 0; i < 3; i++){
+            b[i] = [];
+            for(let j = 0; j < 3; j++){
+                b[i].push(Cell());
+            }
+        }
+       
+    };
+
+    const gameFull = () => {
+        for(let i = 0; i < 3; i++){
+            for(let j = 0; j < 3; j++){
+                if((board.getBoard())[i][j].getMark()=="") return false;
+            }
+        }
+        return true;
+    };
+
+    const checkWin = (row,column) => {
+
+        const checkRow = () => {
+            if(
+                (
+                    (board.getBoard())[row][0].getMark()===
+                    (board.getBoard())[row][1].getMark()
+                ) &&
+                (
+                    (board.getBoard())[row][1].getMark()===
+                    (board.getBoard())[row][2].getMark()
+                ) &&
+                (
+                    (board.getBoard())[row][0].getMark()===
+                    (board.getBoard())[row][2].getMark()
+                ) &&
+                (
+                    (board.getBoard())[row][0].getMark()!=
+                    " "
+                ) &&
+                (
+                    (board.getBoard())[row][1].getMark()!=
+                    " "
+                ) &&
+                (
+                    (board.getBoard())[row][2].getMark()!=
+                    " "
+                )
+            ) {console.log("row1");return true;}
+            return false;
+        };
+        const checkCol = () => {
+            if(
+                (
+                    (board.getBoard())[0][column].getMark()===
+                    (board.getBoard())[1][column].getMark()
+                ) &&
+                (
+                    (board.getBoard())[1][column].getMark()===
+                    (board.getBoard())[2][column].getMark()
+                ) &&
+                (
+                    (board.getBoard())[0][column].getMark()===
+                    (board.getBoard())[2][column].getMark()
+                ) &&
+                (
+                    (board.getBoard())[0][column].getMark()!=
+                    " "
+                ) &&
+                (
+                    (board.getBoard())[1][column].getMark()!=
+                    " "
+                ) &&
+                (
+                    (board.getBoard())[2][column].getMark()!=
+                    " "
+                ) 
+            ) {console.log("col1");return true;}
+            return false;
+        };
+        const checkDiag1 = () => {
+            if(
+                (
+                    (board.getBoard())[0][0].getMark()===
+                    (board.getBoard())[1][1].getMark()
+                ) &&
+                (
+                    (board.getBoard())[1][1].getMark()===
+                    (board.getBoard())[2][2].getMark()
+                ) &&
+                (
+                    (board.getBoard())[0][0].getMark()===
+                    (board.getBoard())[2][2].getMark()
+                ) &&
+                (
+                    (board.getBoard())[0][0].getMark() !=
+                    ""
+                ) &&
+                (
+                    (board.getBoard())[1][1].getMark() !=
+                    ""
+                ) &&
+                (
+                    (board.getBoard())[2][2].getMark() !=
+                    ""
+                ) 
+            ) {console.log("dia1");return true;}
+            return false;
+        };
+        const checkDiag2 = () => {
+            if(
+                (
+                    (board.getBoard())[0][2].getMark()===
+                    (board.getBoard())[1][1].getMark()
+                ) &&
+                (
+                    (board.getBoard())[1][1].getMark()===
+                    (board.getBoard())[2][0].getMark()
+                ) &&
+                (
+                    (board.getBoard())[0][2].getMark()===
+                    (board.getBoard())[2][0].getMark()
+                ) &&
+                (
+                    (board.getBoard())[0][2].getMark() !=
+                    "" 
+                ) &&
+                (
+                    (board.getBoard())[1][1].getMark() !=
+                    ""
+                ) &&
+                (
+                    (board.getBoard())[2][0].getMark() !=
+                    ""
+                ) 
+            ) {console.log("dia2");return true;}
+            return false;
+        };
+        return (checkRow()||checkCol()||checkDiag1()||checkDiag2());
+        
     };
 
     const playRound = (row,column) => {
-        console.log(`Dropping ${getActivePlayer().name}'s token into row ${row}, column ${column}...`);
+        //console.log(`Dropping ${getActivePlayer().name}'s token into row ${row}, column ${column}...`);
         if(board.playSpot(row,column, getActivePlayer())){
+
+            if(checkWin(row,column)){
+                alert(`${getActivePlayer().name} has won!`);
+                resetGame();
+            } else if(gameFull()){
+                alert(`It's a draw.`);
+                resetGame();
+            };
             switchPlayerTurn();
             printNewRound();
         };
@@ -135,21 +285,3 @@ function displayController(){
 }
 
 displayController();
-/*
-function createPlayer (name){
-    const playerName = name;
-    const color = "red";
-    return {playerName,color};
-}
-
-const player1 = createPlayer("player1");
-console.log({
-    playerName: player1.playerName,
-    color: player1.color,
-});
-
-const player2 = createPlayer("player2");
-player2.color="white";
-gameBoard(2,1,player1.color);
-gameBoard(1,1,player2.color);
-*/
